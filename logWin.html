@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ChatBox</title>
+        <script>
+            const $ = require('jquery');
+            const ipcRend = require('electron').ipcRenderer;
+            let usr;
+            ipcRend.on("logged-in", (e, user) => {
+                $("h3").text("Welcome " + user + "!");
+                usr=user;
+            });
+            ipcRend.on("message:typingbyuser", (e, user) => {
+                if(usr!=user)$("textarea").attr("placeholder",user + " is typing...");
+                else $("textarea").attr("placeholder","type message here...");
+            })
+            function sendMessage(){
+                ipcRend.send("message:received", $("textarea").val(), usr);
+            };
+            $(document).keyup(function(e){
+                ipcRend.send("message:typing", usr);
+            });
+        </script>
+    </head>
+    <body style="background-color: oldlace;">
+        <div style="position: relative; left: 5%;">
+            <h3></h3>
+            <br>
+            <textarea rows="4" cols="30" name="message" placeholder="type message here..."></textarea>
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </body>
+</html>

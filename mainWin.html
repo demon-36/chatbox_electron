@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GroupChat</title>
+        <script type="text/javascript">
+            const {ipcRenderer} = require('electron');
+            function start(){
+                ipcRenderer.send("start-gc", "");
+            }
+        </script>
+    </head>
+    <body style="background-color: darkgray;">
+        <div >
+            <h2 style="position: relative; left: 40%;">Welcome to GroupChat</h2>
+        </div>
+        <div>
+            <button style="position: relative; left: 50%;" onclick="start()">Start</button>
+        </div>
+    </body>
+</html>

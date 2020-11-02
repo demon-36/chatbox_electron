@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GroupChat</title>
+        <script>
+            const $ = require('jquery');
+            const elect = require('electron');
+            const {ipcRenderer} = elect;
+            const notifier = require('node-notifier')
+            function submitIt(){
+                let user = $("input").val();
+                ipcRenderer.send("user:login", user);
+                notifier.notify ({
+                    title: "New user joined",
+                    message: user + ' has joined the group chat! Join and chat with him',
+                    sound: true,
+                    wait: true
+                    }, function (err, response) {
+                        if(err)console.log("notifier error : " + err);
+                });
+            }
+            ipcRenderer.on("message:show", (e, msg, usr) => {
+                let li = document.createElement('li');
+                let u = '<b>'+usr + '</b>' + " : " + msg ;
+                $(li).html(u);
+                $("ul").append(li);
+            })
+        </script>
+    </head>
+    <body style="background-color: oldlace;">
+        <div id="login">
+                <b style="position: relative; left: 13%;">Enter username : </b>
+                <input style="position: relative; left: 15%;" type="text" id="user" autofocus>
+                <button style="position: relative; left: 16%;" onclick="submitIt()">Login</button>
+                <br>
+                <hr>
+                <ul style="list-style-type:disk">
+                </ul>
+        </div>
+    </body>
+</html>
